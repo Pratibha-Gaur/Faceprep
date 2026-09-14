@@ -1,0 +1,187 @@
+MY SQL-database       no Sql-database
+-tables               -collections
+-rows                 -documents
+-columns              -Fields
+
+1. db name creation -->
+	USE('Poornima')
+
+2. collection creation /table -->
+	db.createCollection("Students")
+
+3. Add documents --> insert row -->
+	'db.Students.insertOne({
+	     name: "Pratibha",
+	     age: 21,
+	     })'
+
+4.example(task) :-
+
+USE("ECOM")
+
+db.createCollection("Products")
+
+db.Products.insertOne({
+	Name: "T-shirt",
+	Size: "32",
+	Store: "Zara",
+	Price: 3500,
+	features: [
+        "100% Cotton",
+        "Machine Washable",
+        "Breathable"
+    ],
+})
+
+
+
+
+
+Atlas atlas-mbyokf-shard-0 [primary] test> use("Ecom")
+switched to db Ecom
+Atlas atlas-mbyokf-shard-0 [primary] Ecom> db.createCollection("Products")
+|
+{ ok: 1 }
+Atlas atlas-mbyokf-shard-0 [primary] Ecom> db.Products.insertOne({
+|       Name: "T-shirt",
+|       Size: "32",
+|       Store: "Zara",
+|       Price: 3500,
+|       features: [
+|         "100% Cotton",
+|         "Machine Washable",
+|         "Breathable"
+|     ],
+| })
+|
+{
+  acknowledged: true,
+  insertedId: ObjectId('6aa7b2cefae74391d0acbae1')
+}
+Atlas atlas-mbyokf-shard-0 [primary] Ecom> db.Products.insertMany([
+|   {
+|     Name: "T-shirt",
+|     Size: "32",
+|     Store: "Zara",
+|     Price: 3500,
+|     features: [
+|       "100% Cotton",
+|       "Machine Washable",
+|       "Breathable"
+|     ]
+|   },
+|   {
+|     Name: "Jeans",
+|     Size: "30",
+|     Store: "Levi's",
+|     Price: 4200,
+|     features: [
+|       "Denim",
+|       "Stretchable",
+|       "Fade Resistant"
+|     ]
+|   },
+|   {
+|     Name: "Hoodie",
+|     Size: "M",
+|     Store: "H&M",
+|     Price: 2800,
+|     features: [
+|       "Fleece",
+|       "Warm",
+|       "Soft Fabric"
+|     ]
+|   },
+|   {
+|     Name: "Sneakers",
+|     Size: "8",
+|     Store: "Nike",
+|     Price: 6500,
+|     features: [
+|       "Lightweight",
+|       "Cushioned",
+|       "Rubber Sole"
+|     ]
+|   },
+|   {
+|     Name: "Jacket",
+|     Size: "L",
+|     Store: "Puma",
+|     Price: 5500,
+|     features: [
+|       "Water Resistant",
+|       "Windproof",
+|       "Lightweight"
+|     ]
+|   },
+|   {
+|     Name: "Shirt",
+|     Size: "M",
+|     Store: "Zara",
+|     Price: 3200,
+|     features: [
+|       "Linen",
+|       "Full Sleeves",
+|       "Breathable"
+|     ]
+|   },
+|   {
+|     Name: "Track Pants",
+|     Size: "L",
+|     Store: "Adidas",
+|     Price: 2400,
+|     features: [
+|       "Stretchable",
+|       "Quick Dry",
+|       "Comfortable"
+|     ]
+|   },
+|   {
+|     Name: "Sweater",
+|     Size: "M",
+|     Store: "Uniqlo",
+|     Price: 3900,
+|     features: [
+|       "Wool Blend",
+|       "Warm",
+|       "Soft"
+|     ]
+|   },
+|   {
+|     Name: "Cap",
+|     Size: "Free Size",
+|     Store: "Nike",
+|     Price: 1200,
+|     features: [
+|       "Cotton",
+|       "Adjustable",
+|       "Breathable"
+|     ]
+|   },
+|   {
+|     Name: "Dress",
+|     Size: "S",
+|     Store: "H&M",
+|     Price: 4500,
+|     features: [
+|       "Floral Print",
+|       "Lightweight",
+|       "Machine Washable"
+|     ]
+|   }
+| ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6aa7b5a9fae74391d0acbae2'),
+    '1': ObjectId('6aa7b5a9fae74391d0acbae3'),
+    '2': ObjectId('6aa7b5a9fae74391d0acbae4'),
+    '3': ObjectId('6aa7b5a9fae74391d0acbae5'),
+    '4': ObjectId('6aa7b5a9fae74391d0acbae6'),
+    '5': ObjectId('6aa7b5a9fae74391d0acbae7'),
+    '6': ObjectId('6aa7b5a9fae74391d0acbae8'),
+    '7': ObjectId('6aa7b5a9fae74391d0acbae9'),
+    '8': ObjectId('6aa7b5a9fae74391d0acbaea'),
+    '9': ObjectId('6aa7b5a9fae74391d0acbaeb')
+  }
+}
