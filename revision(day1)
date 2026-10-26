@@ -1,0 +1,323 @@
+# MongoDB Basic Commands Notes
+
+## 1. Database Commands
+
+```javascript
+show dbs                         // Display all databases
+use Poornima                     // Switch to Poornima database
+db                               // Display current database
+show collections                 // Display all collections
+db.createCollection("Student")   // Create a collection
+db.dropDatabase()                // Delete current database
+```
+
+## 2. Insert Commands (Create)
+
+**Insert one document:**
+```javascript
+db.Student.insertOne({
+  studentId: 116,
+  name: "Riya Verma",
+  department: "Computer Science",
+  graduationYear: 2027,
+  cgpa: 9.1
+})
+```
+
+**Insert multiple documents:**
+```javascript
+db.Student.insertMany([
+  { studentId: 117, name: "Kabir Joshi", cgpa: 8.8 },
+  { studentId: 118, name: "Meera Shah", cgpa: 9.3 }
+])
+```
+
+## 3. Find Commands (Read)
+
+```javascript
+db.Student.find()                         // Display all documents
+db.Student.find().pretty()                // Display documents in readable format
+db.Student.findOne()                      // Display one document
+db.Student.findOne({ studentId: 101 })    // Find by student ID
+db.Student.find({ department: "Computer Science" }) // Find CS students
+db.Student.find({ graduationYear: 2027 })  // Find 2027 graduates
+db.Student.find({ "address.city": "Jaipur" }) // Find students from Jaipur
+```
+
+## 4. Projection (Display Specific Fields)
+
+```javascript
+// Display only name and CGPA
+db.Student.find({}, { name: 1, cgpa: 1, _id: 0 })
+
+// Display name, department and city
+db.Student.find(
+  {},
+  { name: 1, department: 1, "address.city": 1, _id: 0 }
+)
+```
+
+- `1` = Include field
+- `0` = Exclude field
+- `_id` is included by default unless excluded explicitly.
+
+## 5. Comparison Operators
+
+| Operator | Meaning |
+|---|---|
+| `$gt` | Greater than |
+| `$gte` | Greater than or equal to |
+| `$lt` | Less than |
+| `$lte` | Less than or equal to |
+| `$ne` | Not equal to |
+| `$in` | Matches any value in a list |
+| `$nin` | Does not match values in a list |
+
+```javascript
+db.Student.find({ cgpa: { $gt: 9 } })      // CGPA > 9
+db.Student.find({ cgpa: { $gte: 9 } })     // CGPA >= 9
+db.Student.find({ cgpa: { $lt: 8.5 } })    // CGPA < 8.5
+db.Student.find({ department: { $ne: "Computer Science" } })
+db.Student.find({ graduationYear: { $in: [2026, 2027] } })
+
+// CGPA between 8.5 and 9.2, inclusive
+db.Student.find({ cgpa: { $gte: 8.5, $lte: 9.2 } })
+```
+
+## 6. Logical Operators
+
+| Operator | Meaning |
+|---|---|
+| `$and` | All conditions must be true |
+| `$or` | At least one condition must be true |
+| `$not` | Negates a condition |
+| `$nor` | None of the conditions should be true |
+
+```javascript
+// IT students with CGPA > 9
+db.Student.find({
+  $and: [
+    { department: "Information Technology" },
+    { cgpa: { $gt: 9 } }
+  ]
+})
+
+// Students from Jaipur or Kota
+db.Student.find({
+  $or: [
+    { "address.city": "Jaipur" },
+    { "address.city": "Kota" }
+  ]
+})
+
+// Students not graduating in 2027
+db.Student.find({ graduationYear: { $ne: 2027 } })
+```
+
+## 7. Sorting, Limiting and Skipping
+
+```javascript
+db.Student.find().sort({ cgpa: 1 })         // Ascending order
+db.Student.find().sort({ cgpa: -1 })        // Descending order
+db.Student.find().limit(5)                  // First 5 documents
+db.Student.find().skip(5)                   // Skip first 5 documents
+db.Student.find().sort({ cgpa: -1 }).limit(3) // Top 3 by CGPA
+db.Student.find().skip(5).limit(5)           // Second page of 5
+```
+
+- `1` = Ascending order
+- `-1` = Descending order
+
+## 8. Count and Distinct
+
+```javascript
+db.Student.countDocuments({})  // Count all students
+
+db.Student.countDocuments({
+  department: "Information Technology"
+})                              // Count IT students
+
+db.Student.countDocuments({
+  cgpa: { $gt: 9 }
+})                              // Count students with CGPA > 9
+
+db.Student.distinct("department")    // Unique departments
+db.Student.distinct("address.city")  // Unique cities
+```
+
+## 9. Update Commands (Update)
+
+**Update one document:**
+```javascript
+db.Student.updateOne(
+  { studentId: 101 },
+  { $set: { cgpa: 9.1 } }
+)
+```
+
+**Update multiple documents:**
+```javascript
+db.Student.updateMany(
+  { graduationYear: 2027 },
+  { $set: { status: "Eligible" } }
+)
+```
+
+**Update multiple fields:**
+```javascript
+db.Student.updateOne(
+  { studentId: 101 },
+  { $set: { cgpa: 9.2, department: "Information Technology" } }
+)
+```
+
+**Increase a value:**
+```javascript
+db.Student.updateOne(
+  { studentId: 101 },
+  { $inc: { cgpa: 0.1 } }
+)
+```
+
+**Remove a field:**
+```javascript
+db.Student.updateOne(
+  { studentId: 101 },
+  { $unset: { status: "" } }
+)
+```
+
+### Important Update Operators
+
+- `$set` = Set or modify a field.
+- `$inc` = Increase or decrease a numeric field.
+- `$unset` = Remove a field.
+- `$push` = Add an item to an array.
+- `$pull` = Remove matching items from an array.
+- `$addToSet` = Add an item to an array only if it is not already present.
+
+## 10. Delete Commands (Delete)
+
+```javascript
+db.Student.deleteOne({ studentId: 116 })
+```
+Deletes one matching document.
+
+```javascript
+db.Student.deleteMany({ "address.city": "Kota" })
+```
+Deletes all matching students from Kota.
+
+```javascript
+db.Student.deleteMany({ cgpa: { $lt: 8.5 } })
+```
+Deletes students with CGPA below 8.5.
+
+```javascript
+db.Student.deleteMany({})
+```
+Deletes all documents but keeps the collection.
+
+```javascript
+db.Student.drop()
+```
+Deletes the entire Student collection.
+
+**Warning:** Always run `find()` with your filter before deleting data. An empty filter `{}` matches all documents.
+
+## 11. Array Commands
+
+```javascript
+db.Student.find({ skills: "Python" })
+// Students having Python
+
+db.Student.find({ skills: { $all: ["Python", "SQL"] } })
+// Students having both Python and SQL
+
+db.Student.find({ skills: { $in: ["Python", "Java"] } })
+// Students having Python or Java
+
+db.Student.find({ skills: { $size: 3 } })
+// Students having exactly 3 skills
+
+db.Student.updateOne(
+  { studentId: 101 },
+  { $push: { skills: "Git" } }
+)
+// Add Git to skills
+
+db.Student.updateOne(
+  { studentId: 101 },
+  { $pull: { skills: "Git" } }
+)
+// Remove Git from skills
+
+db.Student.updateOne(
+  { studentId: 101 },
+  { $addToSet: { skills: "Java" } }
+)
+// Add Java only if it is not already present
+```
+
+## 12. Aggregation Commands
+
+**Calculate average CGPA:**
+```javascript
+db.Student.aggregate([
+  {
+    $group: {
+      _id: null,
+      averageCGPA: { $avg: "$cgpa" }
+    }
+  }
+])
+```
+
+**Count students in each department:**
+```javascript
+db.Student.aggregate([
+  {
+    $group: {
+      _id: "$department",
+      totalStudents: { $sum: 1 }
+    }
+  }
+])
+```
+
+**Find the highest CGPA in each department:**
+```javascript
+db.Student.aggregate([
+  {
+    $group: {
+      _id: "$department",
+      highestCGPA: { $max: "$cgpa" }
+    }
+  }
+])
+```
+
+### Important Aggregation Operators
+
+- `$group` = Group documents.
+- `$sum` = Calculate a sum or count documents using `$sum: 1`.
+- `$avg` = Calculate average.
+- `$max` = Find maximum value.
+- `$min` = Find minimum value.
+
+## 13. Quick Revision: CRUD
+
+CRUD stands for **Create, Read, Update and Delete**.
+
+| Operation | MongoDB Commands |
+|---|---|
+| Create | `insertOne()`, `insertMany()` |
+| Read | `find()`, `findOne()` |
+| Update | `updateOne()`, `updateMany()` |
+| Delete | `deleteOne()`, `deleteMany()` |
+
+**Database:** `Poornima`
+
+**Collection:** `Student`
+
+**Current dataset:** 15 student documents (before any additional insertions or deletions).
